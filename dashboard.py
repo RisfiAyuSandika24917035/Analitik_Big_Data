@@ -8,8 +8,8 @@ st.set_page_config(page_title="Evaluasi Model Random Forest", layout="centered")
 st.title("📊 Evaluasi Model Random Forest untuk Prediksi Stroke")
 
 st.markdown("""
-Dashboard ini digunakan untuk mengevaluasi performa model Random Forest yang telah dilatih untuk memprediksi risiko stroke. 
-Silakan unggah hasil prediksi dari data training dan testing.
+Dashboard ini mengevaluasi performa model Random Forest untuk memprediksi risiko stroke.
+Unggah hasil prediksi data training dan testing dalam format CSV.
 """)
 
 # Upload file
@@ -17,17 +17,15 @@ st.subheader("📁 Upload File")
 file_train = st.file_uploader("Upload file hasil prediksi data training (CSV)", type=["csv"], key="train")
 file_test = st.file_uploader("Upload file hasil prediksi data testing (CSV)", type=["csv"], key="test")
 
-# Jika kedua file diunggah
 if file_train and file_test:
     df_train = pd.read_csv(file_train)
     df_test = pd.read_csv(file_test)
 
-    # Pastikan kolom benar
     for df in [df_train, df_test]:
         df['stroke'] = df['stroke'].astype(int)
         df['prediction'] = df['prediction'].astype(int)
 
-    # Accuracy metrics
+    # Akurasi
     st.subheader("✅ Akurasi Model")
     col1, col2 = st.columns(2)
     acc_train = accuracy_score(df_train['stroke'], df_train['prediction'])
@@ -36,8 +34,8 @@ if file_train and file_test:
     col1.metric("🎓 Akurasi Training", f"{acc_train*100:.2f}%")
     col2.metric("🧪 Akurasi Testing", f"{acc_test*100:.2f}%")
 
-    # Confusion Matrix - Training
-    st.subheader("📌 Confusion Matrix - Data Training")
+    # Confusion Matrix Training
+    st.subheader("📌 Confusion Matrix - Training")
     cm_train = confusion_matrix(df_train['stroke'], df_train['prediction'])
     fig1, ax1 = plt.subplots()
     sns.heatmap(cm_train, annot=True, fmt="d", cmap="Blues", ax=ax1)
@@ -46,8 +44,8 @@ if file_train and file_test:
     ax1.set_title("Confusion Matrix - Training")
     st.pyplot(fig1)
 
-    # Confusion Matrix - Testing
-    st.subheader("📌 Confusion Matrix - Data Testing")
+    # Confusion Matrix Testing
+    st.subheader("📌 Confusion Matrix - Testing")
     cm_test = confusion_matrix(df_test['stroke'], df_test['prediction'])
     fig2, ax2 = plt.subplots()
     sns.heatmap(cm_test, annot=True, fmt="d", cmap="Greens", ax=ax2)
@@ -56,15 +54,14 @@ if file_train and file_test:
     ax2.set_title("Confusion Matrix - Testing")
     st.pyplot(fig2)
 
-    # Classification Report
+    # Classification Report Testing
     st.subheader("🧾 Classification Report - Data Testing")
     report = classification_report(df_test['stroke'], df_test['prediction'], output_dict=True)
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
-    # Visualisasi Distribusi Data Aktual vs Prediksi - Testing
-    st.subheader("📈 Distribusi Data Aktual vs Prediksi - Testing Set (Line Chart)")
-
+    # Visualisasi Data Aktual vs Prediksi
+    st.subheader("📈 Distribusi Data Aktual vs Prediksi - Testing Set")
     count_actual = df_test['stroke'].value_counts().sort_index()
     count_pred = df_test['prediction'].value_counts().sort_index()
 
@@ -77,20 +74,3 @@ if file_train and file_test:
     fig3, ax3 = plt.subplots()
     ax3.plot(df_line['Label'], df_line['Actual'], marker='o', label='Actual', color='blue')
     ax3.plot(df_line['Label'], df_line['Predicted'], marker='o', label='Predicted', color='orange')
-    ax3.set_title("Distribusi Stroke vs Tidak Stroke - Data Testing")
-    ax3.set_ylabel("Jumlah")
-    ax3.legend()
-    st.pyplot(fig3)
-
-    # Barplot Perbandingan Akurasi
-    acc_df = pd.DataFrame({
-        "Data": ["Training", "Testing"],
-        "Accuracy": [acc_train * 100, acc_test * 100]
-    })
-
-    st.subheader("📊 Perbandingan Akurasi Training vs Testing")
-    fig4, ax4 = plt.subplots()
-    sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
-    ax4.set_ylabel("Akurasi (%)")
-    ax4.set_ylim(0, 100)
-    st.pyplot(fig4)
