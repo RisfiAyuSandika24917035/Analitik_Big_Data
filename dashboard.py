@@ -62,11 +62,18 @@ if file_train and file_test:
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
-    st.subheader("Perbandingan Akurasi Training vs Testing")
-    acc_df = pd.DataFrame({
-    "Data": ["Training", "Testing"],
-    "Accuracy": [acc_train * 100, acc_test * 100]
+    st.subheader("Distribusi Data Aktual vs Prediksi - Testing Set")
+
+    count_actual = df_test['stroke'].value_counts().sort_index()
+    count_pred = df_test['prediction'].value_counts().sort_index()
+
+    df_comp = pd.DataFrame({
+        'Actual': count_actual,
+        'Predicted': count_pred
     })
+
+    st.bar_chart(df_comp)
+
     fig4, ax4 = plt.subplots()
     sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
     ax4.set_ylim(0, 100)
