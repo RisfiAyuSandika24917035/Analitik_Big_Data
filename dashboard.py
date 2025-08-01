@@ -62,13 +62,12 @@ if file_train and file_test:
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
-    # Line Chart Accuracy Visual
-    st.subheader("📈 Perbandingan Akurasi")
-    acc_df = pd.DataFrame({
-        "Dataset": ["Training", "Testing"],
-        "Accuracy": [acc_train, acc_test]
-    })
-    st.line_chart(acc_df.set_index("Dataset"))
-
-else:
-    st.info("Silakan upload kedua file prediksi (training & testing) untuk melihat evaluasi.")
+   st.subheader("Perbandingan Akurasi Training vs Testing")
+acc_df = pd.DataFrame({
+    "Data": ["Training", "Testing"],
+    "Accuracy": [acc_train * 100, acc_test * 100]
+})
+fig4, ax4 = plt.subplots()
+sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
+ax4.set_ylim(0, 100)
+st.pyplot(fig4)
