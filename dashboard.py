@@ -117,7 +117,7 @@ sns.barplot(x=train_counts.index.map({0: "Tidak Stroke", 1: "Stroke"}),
             ax=ax5)
 ax5.set_ylabel("Jumlah")
 ax5.set_xlabel("Label Stroke")
-ax5.set_title("Distribusi Label di Data Training")
+ax5.set_title("Hasil")
 st.pyplot(fig5)
 
 # Tampilkan persentasenya juga
