@@ -62,12 +62,12 @@ if file_train and file_test:
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
-   st.subheader("Perbandingan Akurasi Training vs Testing")
-acc_df = pd.DataFrame({
+    st.subheader("Perbandingan Akurasi Training vs Testing")
+    acc_df = pd.DataFrame({
     "Data": ["Training", "Testing"],
     "Accuracy": [acc_train * 100, acc_test * 100]
-})
-fig4, ax4 = plt.subplots()
-sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
-ax4.set_ylim(0, 100)
-st.pyplot(fig4)
+    })
+    fig4, ax4 = plt.subplots()
+    sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
+    ax4.set_ylim(0, 100)
+    st.pyplot(fig4)
