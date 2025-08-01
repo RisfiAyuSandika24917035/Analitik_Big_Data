@@ -62,6 +62,11 @@ if file_train and file_test:
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
+    acc_df = pd.DataFrame({
+    "Data": ["Training", "Testing"],
+    "Accuracy": [acc_train, acc_test]
+    })
+
     st.subheader("Distribusi Data Aktual vs Prediksi - Testing Set")
 
     count_actual = df_test['stroke'].value_counts().sort_index()
