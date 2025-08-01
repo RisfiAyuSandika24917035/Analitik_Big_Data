@@ -110,4 +110,23 @@ if "prediction" in pred_df.columns:
         st.write(f"**{label}**: {count} orang ({(count/total)*100:.1f}%)")
 else:
     st.warning("Kolom 'prediction' tidak ditemukan di file prediksi.")
+    # Distribusi label di data training
+st.subheader("📚 Distribusi Data Training: Stroke vs Tidak Stroke")
+
+train_counts = df["stroke"].value_counts().sort_index()
+fig5, ax5 = plt.subplots()
+sns.barplot(x=train_counts.index.map({0: "Tidak Stroke", 1: "Stroke"}),
+            y=train_counts.values,
+            palette=["#a6cee3", "#fb9a99"],
+            ax=ax5)
+ax5.set_ylabel("Jumlah")
+ax5.set_xlabel("Label Stroke")
+ax5.set_title("Distribusi Label di Data Training")
+st.pyplot(fig5)
+
+# Tampilkan persentasenya juga
+total_train = train_counts.sum()
+for label, count in zip(["Tidak Stroke", "Stroke"], train_counts):
+    st.write(f"**{label}**: {count} data ({(count/total_train)*100:.1f}%)")
+
 
