@@ -62,24 +62,35 @@ if file_train and file_test:
     report_df = pd.DataFrame(report).transpose()
     st.dataframe(report_df.style.format({'precision': '{:.2f}', 'recall': '{:.2f}', 'f1-score': '{:.2f}'}))
 
-    acc_df = pd.DataFrame({
-    "Data": ["Training", "Testing"],
-    "Accuracy": [acc_train, acc_test]
-    })
-
-    st.subheader("Distribusi Data Aktual vs Prediksi - Testing Set")
+    # Visualisasi Distribusi Data Aktual vs Prediksi - Testing
+    st.subheader("📈 Distribusi Data Aktual vs Prediksi - Testing Set (Line Chart)")
 
     count_actual = df_test['stroke'].value_counts().sort_index()
     count_pred = df_test['prediction'].value_counts().sort_index()
 
-    df_comp = pd.DataFrame({
-        'Actual': count_actual,
-        'Predicted': count_pred
+    df_line = pd.DataFrame({
+        'Label': ['Tidak Stroke', 'Stroke'],
+        'Actual': count_actual.values,
+        'Predicted': count_pred.values
     })
 
-    st.bar_chart(df_comp)
+    fig3, ax3 = plt.subplots()
+    ax3.plot(df_line['Label'], df_line['Actual'], marker='o', label='Actual', color='blue')
+    ax3.plot(df_line['Label'], df_line['Predicted'], marker='o', label='Predicted', color='orange')
+    ax3.set_title("Distribusi Stroke vs Tidak Stroke - Data Testing")
+    ax3.set_ylabel("Jumlah")
+    ax3.legend()
+    st.pyplot(fig3)
 
+    # Barplot Perbandingan Akurasi
+    acc_df = pd.DataFrame({
+        "Data": ["Training", "Testing"],
+        "Accuracy": [acc_train * 100, acc_test * 100]
+    })
+
+    st.subheader("📊 Perbandingan Akurasi Training vs Testing")
     fig4, ax4 = plt.subplots()
     sns.barplot(data=acc_df, x="Data", y="Accuracy", palette="pastel", ax=ax4)
+    ax4.set_ylabel("Akurasi (%)")
     ax4.set_ylim(0, 100)
     st.pyplot(fig4)
