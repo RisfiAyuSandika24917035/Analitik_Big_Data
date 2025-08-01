@@ -9,10 +9,6 @@ st.title("📊 Dashboard Prediksi Risiko Stroke")
 # Load data
 df = pd.read_csv("healthcare-dataset-stroke-data.csv")
 
-# Tampilan data awal
-st.subheader("🔎 Sekilas Data")
-st.dataframe(df.head())
-
 # Bar chart: stroke vs non-stroke per kategori smoking_status
 st.subheader("🚬 Perbandingan Stroke berdasarkan Status Merokok")
 fig1, ax1 = plt.subplots()
