@@ -85,3 +85,29 @@ if uploaded_file:
     pred_df = pd.read_csv(uploaded_file)
     st.write("Contoh hasil prediksi:")
     st.dataframe(pred_df.head())
+    # Visualisasi hasil prediksi
+st.subheader("📊 Visualisasi Hasil Prediksi")
+
+# Cek apakah kolom prediction ada
+if "prediction" in pred_df.columns:
+    # Hitung jumlah prediksi 0 dan 1
+    pred_counts = pred_df["prediction"].value_counts().sort_index()
+    
+    # Bar chart hasil prediksi
+    fig4, ax4 = plt.subplots()
+    sns.barplot(x=pred_counts.index.map({0: "Tidak Stroke", 1: "Stroke"}),
+                y=pred_counts.values,
+                palette=["#66c2a5", "#fc8d62"],
+                ax=ax4)
+    ax4.set_ylabel("Jumlah")
+    ax4.set_xlabel("Hasil Prediksi")
+    ax4.set_title("Distribusi Prediksi Stroke")
+    st.pyplot(fig4)
+
+    # Tampilkan persentasenya juga
+    total = pred_counts.sum()
+    for label, count in zip(["Tidak Stroke", "Stroke"], pred_counts):
+        st.write(f"**{label}**: {count} orang ({(count/total)*100:.1f}%)")
+else:
+    st.warning("Kolom 'prediction' tidak ditemukan di file prediksi.")
+
